@@ -5,7 +5,9 @@ defmodule Web.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", Web do
+  scope "/", Web do
     pipe_through :api
+
+    resources "/alexa_skills", AlexaSkillController, only: [:create]
   end
 end
