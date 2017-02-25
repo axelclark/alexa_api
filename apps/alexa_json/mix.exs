@@ -36,6 +36,9 @@ defmodule AlexaJSON.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:ecto, "~> 2.1.1"}]
+    [
+      {:ecto, "~> 2.1.1"},
+      {:poison, "~> 3.0"}
+    ]
   end
 end

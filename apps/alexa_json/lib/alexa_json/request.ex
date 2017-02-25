@@ -15,4 +15,14 @@ defmodule AlexaJSON.Request do
     |> cast_embed(:request)
     |> cast_embed(:session)
   end
+
+  def from_json(data) when is_binary(data) do
+    Poison.decode!(data) |> from_json
+  end
+
+  def from_json(data) when is_map(data) do
+    %__MODULE__{}
+    |> changeset(data)
+    |> apply_changes
+  end
 end
