@@ -12,5 +12,6 @@ defmodule AlexaJSON.UserTest do
     changeset = User.changeset(%User{}, attrs)
 
     assert get_change(changeset, :userId) == "user123"
+    assert get_change(changeset, :test) == nil
   end
 end
