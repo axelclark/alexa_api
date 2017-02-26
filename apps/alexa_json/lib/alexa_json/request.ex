@@ -5,8 +5,8 @@ defmodule AlexaJSON.Request do
   @primary_key false
   embedded_schema do
     field :version, :string, default: ""
-    embeds_one :request, AlexaJSON.RequestElement
-    embeds_one :session, AlexaJSON.Session
+    embeds_one :request, AlexaJSON.RequestElement, on_replace: :update
+    embeds_one :session, AlexaJSON.Session, on_replace: :update
   end
 
   def changeset(schema, data) do

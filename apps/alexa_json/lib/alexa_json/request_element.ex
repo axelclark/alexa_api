@@ -8,7 +8,7 @@ defmodule AlexaJSON.RequestElement do
     field :requestId, :string, default: ""
     field :locale, :string, default: ""
     field :timestamp, :utc_datetime, default: nil
-    embeds_one :intent, AlexaJSON.Intent
+    embeds_one :intent, AlexaJSON.Intent, on_replace: :update
   end
 
   def changeset(schema, data) do

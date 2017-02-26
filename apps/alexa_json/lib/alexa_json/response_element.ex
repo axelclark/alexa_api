@@ -5,9 +5,9 @@ defmodule AlexaJSON.ResponseElement do
   @primary_key false
   embedded_schema do
     field :shouldEndSession, :boolean, default: true
-    embeds_one :outputSpeech, AlexaJSON.OutputSpeech
-    embeds_one :reprompt, AlexaJSON.Reprompt
-    embeds_one :card, AlexaJSON.Card
+    embeds_one :outputSpeech, AlexaJSON.OutputSpeech, on_replace: :update
+    embeds_one :reprompt, AlexaJSON.Reprompt, on_replace: :update
+    embeds_one :card, AlexaJSON.Card, on_replace: :update
 
   end
 

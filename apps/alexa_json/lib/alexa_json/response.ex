@@ -7,7 +7,7 @@ defmodule AlexaJSON.Response do
   embedded_schema do
     field :version, :string, default: ""
     field :sessionAttributes, :map, default: %{}
-    embeds_one :response, ResponseElement
+    embeds_one :response, ResponseElement, on_replace: :update
   end
 
   def changeset(schema, data) do
@@ -36,6 +36,12 @@ defmodule AlexaJSON.Response do
 
     response
     |> Response.changeset(request_data)
+    |> apply_changes
+  end
+
+  def update_response(response, changes) do
+    response
+    |> Response.changeset(changes)
     |> apply_changes
   end
 end

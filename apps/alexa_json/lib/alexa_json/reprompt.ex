@@ -4,7 +4,7 @@ defmodule AlexaJSON.Reprompt do
 
   @primary_key false
   embedded_schema do
-    embeds_one :outputSpeech, AlexaJSON.OutputSpeech
+    embeds_one :outputSpeech, AlexaJSON.OutputSpeech, on_replace: :update
   end
 
   def changeset(schema, data) do

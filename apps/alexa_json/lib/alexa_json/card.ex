@@ -8,7 +8,7 @@ defmodule AlexaJSON.Card do
     field :title, :string, default: ""
     field :content, :string, default: ""
     field :text, :string, default: ""
-    embeds_one :image, AlexaJSON.Image
+    embeds_one :image, AlexaJSON.Image, on_replace: :update
   end
 
   def changeset(schema, data) do

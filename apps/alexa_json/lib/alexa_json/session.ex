@@ -7,8 +7,8 @@ defmodule AlexaJSON.Session do
     field :new, :boolean, default: true
     field :sessionId, :string, default: ""
     field :attributes, :map, default: %{}
-    embeds_one :user, AlexaJSON.User
-    embeds_one :application, AlexaJSON.Application
+    embeds_one :user, AlexaJSON.User, on_replace: :update
+    embeds_one :application, AlexaJSON.Application, on_replace: :update
   end
 
   def changeset(schema, data) do

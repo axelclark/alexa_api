@@ -1,8 +1,8 @@
 defmodule AlexaJSON.ResponseTest do
   use ExUnit.Case
   import Ecto.Changeset
-  alias AlexaJSON.{Request, RequestElement, Intent, Session, User, Application,
-                   Response, ResponseElement, Card, Image, OutputSpeech, Reprompt}
+  alias AlexaJSON.{Request, Session, Response, ResponseElement, Card, Image,
+                   OutputSpeech, Reprompt}
 
   @valid_attrs %{
     "response" => %{
@@ -69,21 +69,9 @@ defmodule AlexaJSON.ResponseTest do
 
   describe "create_from_request/2" do
     test "creates changeset from request" do
-      request = %Request{request:
-        %RequestElement{intent:
-          %Intent{name: "alexa skill",
-            slots: %{"slot" => %{"name" => "value"}}
-          }, locale: "en-US", requestId: "request123",
-          timestamp: %DateTime{calendar: Calendar.ISO, day: 22, hour: 2,
-            microsecond: {0, 0}, minute: 40, month: 2, second: 44, std_offset: 0,
-            time_zone: "Etc/UTC", utc_offset: 0, year: 2017, zone_abbr: "UTC"
-          },
-          type: "IntentRequest"
-        },
-        session: %Session{application:
-          %Application{applicationId: "application123"},
-          attributes: %{"attr" => %{"key" => "value"}}, new: true,
-          sessionId: "session123", user: %User{userId: "user123"}
+      request = %Request{
+        session: %Session{
+          attributes: %{"attr" => %{"key" => "value"}}
         },
         version: "1.0"
       }
@@ -92,6 +80,24 @@ defmodule AlexaJSON.ResponseTest do
 
       assert result.sessionAttributes == %{"attr" => %{"key" => "value"}}
       assert result.version == "1.0"
+    end
+  end
+
+  describe "update_response/2" do
+    test "update response struct" do
+      request = %Request{
+        session: %Session{
+          attributes: %{"attr" => %{"key" => "value"}}
+        },
+        version: "1.0"
+      }
+      response = AlexaJSON.Response.create_from_request(request)
+      outputSpeech =
+        %{response: %{outputSpeech: %{type: "plainText", text: "hi"}}}
+
+      result = AlexaJSON.Response.update_response(response, outputSpeech)
+
+      assert result.response.outputSpeech.text == "hi"
     end
   end
 end
