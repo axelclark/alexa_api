@@ -4,7 +4,7 @@ defmodule AlexaJSON.Request do
 
   @primary_key false
   embedded_schema do
-    field :version, :string
+    field :version, :string, default: ""
     embeds_one :request, AlexaJSON.RequestElement
     embeds_one :session, AlexaJSON.Session
   end

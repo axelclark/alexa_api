@@ -4,8 +4,8 @@ defmodule AlexaJSON.Image do
 
   @primary_key false
   embedded_schema do
-      field :largeImageUrl, :string
-      field :smallImageUrl, :string
+      field :largeImageUrl, :string, default: ""
+      field :smallImageUrl, :string, default: ""
   end
 
   def changeset(schema, data) do

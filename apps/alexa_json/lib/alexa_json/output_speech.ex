@@ -4,9 +4,9 @@ defmodule AlexaJSON.OutputSpeech do
 
   @primary_key false
   embedded_schema do
-      field :type, :string
-      field :text, :string
-      field :ssml, :string
+      field :type, :string, default: ""
+      field :text, :string, default: ""
+      field :ssml, :string, default: ""
   end
 
   def changeset(schema, data) do

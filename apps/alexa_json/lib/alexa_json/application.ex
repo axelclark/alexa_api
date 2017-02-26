@@ -4,7 +4,7 @@ defmodule AlexaJSON.Application do
 
   @primary_key false
   embedded_schema do
-      field :applicationId, :string
+      field :applicationId, :string, default: ""
   end
 
   def changeset(schema, data) do

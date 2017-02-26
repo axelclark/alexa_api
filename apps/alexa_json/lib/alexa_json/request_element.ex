@@ -4,10 +4,10 @@ defmodule AlexaJSON.RequestElement do
 
   @primary_key false
   embedded_schema do
-    field :type, :string
-    field :requestId, :string
-    field :locale, :string
-    field :timestamp, :utc_datetime
+    field :type, :string, default: ""
+    field :requestId, :string, default: ""
+    field :locale, :string, default: ""
+    field :timestamp, :utc_datetime, default: nil
     embeds_one :intent, AlexaJSON.Intent
   end
 

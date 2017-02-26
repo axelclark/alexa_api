@@ -4,9 +4,9 @@ defmodule AlexaJSON.Session do
 
   @primary_key false
   embedded_schema do
-    field :new, :boolean
-    field :sessionId, :string
-    field :attributes, :map
+    field :new, :boolean, default: true
+    field :sessionId, :string, default: ""
+    field :attributes, :map, default: %{}
     embeds_one :user, AlexaJSON.User
     embeds_one :application, AlexaJSON.Application
   end

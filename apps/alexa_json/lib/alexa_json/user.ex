@@ -4,7 +4,7 @@ defmodule AlexaJSON.User do
 
   @primary_key false
   embedded_schema do
-      field :userId, :string
+      field :userId, :string, default: ""
   end
 
   def changeset(schema, data) do

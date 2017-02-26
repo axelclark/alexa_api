@@ -4,8 +4,8 @@ defmodule AlexaJSON.Intent do
 
   @primary_key false
   embedded_schema do
-    field :name, :string
-    field :slots, :map
+    field :name, :string, default: ""
+    field :slots, :map, default: %{}
   end
 
   def changeset(schema, data) do

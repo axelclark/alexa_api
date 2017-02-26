@@ -4,10 +4,10 @@ defmodule AlexaJSON.Card do
 
   @primary_key false
   embedded_schema do
-    field :type, :string
-    field :title, :string
-    field :content, :string
-    field :text, :string
+    field :type, :string, default: ""
+    field :title, :string, default: ""
+    field :content, :string, default: ""
+    field :text, :string, default: ""
     embeds_one :image, AlexaJSON.Image
   end
 
