@@ -1,7 +1,7 @@
 defmodule AlexaJSON.Response do
   use Ecto.Schema
   import Ecto.Changeset
-  alias AlexaJSON.ResponseElement
+  alias AlexaJSON.{ResponseElement, Response, Card, Image, OutputSpeech, Reprompt}
 
   @primary_key false
   embedded_schema do
@@ -14,5 +14,28 @@ defmodule AlexaJSON.Response do
     schema
     |> cast(data, [:version, :sessionAttributes])
     |> cast_embed(:response)
+  end
+
+  def create_from_request(request) do
+    request_data =
+      %{
+        sessionAttributes: request.session.attributes,
+        version: request.version
+      }
+
+    response =
+      %Response{
+        response: %ResponseElement{
+          card: %Card{image: %Image{}},
+          outputSpeech: %OutputSpeech{},
+          reprompt: %Reprompt{
+            outputSpeech: %OutputSpeech{}
+          }
+        }
+      }
+
+    response
+    |> Response.changeset(request_data)
+    |> apply_changes
   end
 end
