@@ -93,7 +93,7 @@ defmodule AlexaJSON.ResponseTest do
       }
       response = AlexaJSON.Response.create_from_request(request)
       outputSpeech =
-        %{response: %{outputSpeech: %{type: "plainText", text: "hi"}}}
+        %{response: %{outputSpeech: %{type: "PlainText", text: "hi"}}}
 
       result = AlexaJSON.Response.update_response(response, outputSpeech)
 
