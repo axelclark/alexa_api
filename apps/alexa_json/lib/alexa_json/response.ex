@@ -23,18 +23,7 @@ defmodule AlexaJSON.Response do
         version: request.version
       }
 
-    response =
-      %Response{
-        response: %ResponseElement{
-          card: %Card{image: %Image{}},
-          outputSpeech: %OutputSpeech{},
-          reprompt: %Reprompt{
-            outputSpeech: %OutputSpeech{}
-          }
-        }
-      }
-
-    response
+    %Response{}
     |> Response.changeset(request_data)
     |> apply_changes
   end
