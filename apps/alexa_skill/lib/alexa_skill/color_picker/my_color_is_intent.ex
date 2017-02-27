@@ -1,5 +1,5 @@
-defmodule AlexaSkill.ColorPicker do
-  def my_color_intent(request, response) do
+defmodule AlexaSkill.ColorPicker.MyColorIsIntent do
+  def handle_request(request, response) do
     color = get_color(request.request.intent.slots)
     update = create_update(color)
     AlexaJSON.Response.update_response(response, update)
