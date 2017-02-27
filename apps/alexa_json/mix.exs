@@ -38,7 +38,7 @@ defmodule AlexaJSON.Mixfile do
   defp deps do
     [
       {:ecto, "~> 2.1.1"},
-      {:poison, "~> 3.0"}
+      {:poison, "~> 2.0"}
     ]
   end
 end

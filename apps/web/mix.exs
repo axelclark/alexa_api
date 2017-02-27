@@ -33,7 +33,7 @@ defmodule Web.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:alexa_json, in_umbrella: true},
+      {:alexa_skill, in_umbrella: true},
       {:cowboy, "~> 1.0"},
       {:gettext, "~> 0.11"},
       {:phoenix, "~> 1.2.1"},
