@@ -1,11 +1,11 @@
 defmodule AlexaSkill do
   def handle_request(request) do
-    outputSpeech =
-      %{response: %{outputSpeech: %{type: "PlainText", text: "hi, Nana"}}}
+    request = AlexaJSON.Request.from_json(request)
+    response = AlexaJSON.Response.create_from_request(request)
 
-    request
-    |> AlexaJSON.Request.from_json
-    |> AlexaJSON.Response.create_from_request
-    |> AlexaJSON.Response.update_response(outputSpeech)
+    case request.request.intent.name do
+      "MyColorIsIntent" ->
+        AlexaSkill.ColorPicker.my_color_intent(request, response)
+    end
   end
 end
