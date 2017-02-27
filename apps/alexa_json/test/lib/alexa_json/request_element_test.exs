@@ -6,7 +6,7 @@ defmodule AlexaJSON.RequestElementTest do
   @valid_attrs %{"type" => "IntentRequest", "requestId" => "request123",
     "locale" => "en-US", "timestamp" => "2017-02-22T02:40:44Z", "intent" => %{
        "name" => "alexa skill", "slots" => %{"slot" => %{"name" => "value"}}
-     }}
+     }, "inDialog" => false}
   @invalid_attrs %{"test" => "test"}
 
   test "changeset casts only valid attributes" do
@@ -18,7 +18,7 @@ defmodule AlexaJSON.RequestElementTest do
       timestamp: %DateTime{calendar: Calendar.ISO, day: 22, hour: 2,
         microsecond: {0, 0}, minute: 40, month: 2, second: 44, std_offset: 0,
         time_zone: "Etc/UTC", utc_offset: 0, year: 2017, zone_abbr: "UTC"},
-      type: "IntentRequest"}
+      type: "IntentRequest", inDialog: false}
 
     changeset = RequestElement.changeset(%RequestElement{}, attrs)
     request_element = apply_changes(changeset)
