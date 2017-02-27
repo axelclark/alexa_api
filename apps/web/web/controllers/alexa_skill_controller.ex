@@ -1,7 +1,9 @@
 defmodule Web.AlexaSkillController do
   use Web.Web, :controller
 
-  def create(conn, _params) do
-    json conn, %{}
+  def create(conn, params) do
+    response = AlexaSkill.handle_request(params)
+
+    json conn, response
   end
 end
