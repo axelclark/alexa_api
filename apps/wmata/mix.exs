@@ -15,7 +15,7 @@ defmodule WMATA.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger],
+    [extra_applications: [:logger, :httpoison],
      mod: {WMATA.Application, []}]
   end
 
@@ -29,6 +29,9 @@ defmodule WMATA.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:httpoison, "~> 0.10.0"},
+      {:poison, "~> 2.0"}
+    ]
   end
 end
