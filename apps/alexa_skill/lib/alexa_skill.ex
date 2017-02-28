@@ -1,4 +1,5 @@
 defmodule AlexaSkill do
+  require Logger
   alias AlexaSkill.ColorPicker.{WhatsMyColorIntent, MyColorIsIntent}
 
   def handle_request(request) do

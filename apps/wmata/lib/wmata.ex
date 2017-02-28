@@ -1,6 +1,8 @@
 defmodule WMATA do
   use GenServer
 
+  require Logger
+
   @name WM
 
   ## Client API
@@ -9,8 +11,10 @@ defmodule WMATA do
     GenServer.start_link(__MODULE__, :ok, opts ++ [name: WM])
   end
 
-  def get_station_info(station) do
-    GenServer.call(@name, {:station, station})
+  def get_station_info(station_code, platform) do
+    GenServer.call(
+      @name, {:station, [station_code: station_code, platform: platform]}
+    )
   end
 
   def get_state do
@@ -31,11 +35,13 @@ defmodule WMATA do
     {:ok, %{}}
   end
 
-  def handle_call({:station, station}, _from, state) do
-    case station_info_of(station) do
-      {:ok, next_train} ->
-        new_state = update_state(state, station)
-        {:reply, format_next_train(next_train), new_state}
+  def handle_call(
+    {:station, [station_code: station_code, platform: platform]}, _from, state
+  ) do
+    case station_info_of(station_code) do
+      {:ok, trains_list} ->
+        new_state = update_state(state, station_code)
+        {:reply, format_station_status(trains_list, platform), new_state}
       _ ->
         {:reply, :error, state}
     end
@@ -76,17 +82,19 @@ defmodule WMATA do
   end
 
   defp parse_response({:ok, %HTTPoison.Response{body: body, status_code: 200}}) do
-    body |> Poison.decode! |> get_next_train
+    body
+    |> Poison.decode!
+    |> get_trains_for_station
   end
 
   defp parse_response(_) do
     :error
   end
 
-  defp get_next_train(json) do
+  defp get_trains_for_station(json) do
     try do
-      next_train = json["Trains"] |> List.first
-      {:ok, next_train}
+      train_list = json["Trains"]
+      {:ok, train_list}
     rescue
       _ -> :error
     end
@@ -109,7 +117,31 @@ defmodule WMATA do
     end
   end
 
-  defp format_next_train(next_train) do
-    "The next train from #{next_train["LocationName"]} boards in #{next_train["Min"]} mins, headed to #{next_train["Destination"]}"
+  defp format_station_status(trains_list, platform) do
+    station_info = format_station_info(trains_list, platform)
+    trains_info = format_trains_info(trains_list, platform)
+
+    station_info <> trains_info
+  end
+
+  defp format_station_info(trains_list, platform) do
+    trains_list
+    |> List.first
+    |> station_info(platform)
+  end
+
+  defp station_info(train, platform) do
+    "The next trains departing #{train["LocationName"]} from platform #{platform} are: "
+  end
+
+  def format_trains_info(trains_list, platform) do
+    trains_list
+    |> Enum.filter(&(&1["Group"] == platform))
+    |> Enum.reduce("", &(format_train_status/2))
+  end
+
+  def format_train_status(train, prev_train) do
+    prev_train <> "  " <>
+      "#{train["Destination"]} departing in #{train["Min"]} minutes."
   end
 end

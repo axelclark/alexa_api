@@ -24,7 +24,7 @@ defmodule AlexaSkill.MetroStatus do
   end
 
   def get_train_status() do
-    status = WMATA.get_station_info("E03")
+    status = WMATA.get_station_info("E03", "2")
     IO.inspect status
     status
   end
