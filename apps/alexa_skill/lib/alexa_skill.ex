@@ -10,6 +10,8 @@ defmodule AlexaSkill do
         MyColorIsIntent.handle_request(request, response)
       "WhatsMyColorIntent" ->
         WhatsMyColorIntent.handle_request(request, response)
+      "MetroStatus" ->
+        AlexaSkill.MetroStatus.handle_request(request, response)
     end
   end
 end

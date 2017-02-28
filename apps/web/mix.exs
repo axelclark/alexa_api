@@ -21,7 +21,7 @@ defmodule Web.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Web, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext]]
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :wmata]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,6 +38,7 @@ defmodule Web.Mixfile do
       {:gettext, "~> 0.11"},
       {:phoenix, "~> 1.2.1"},
       {:phoenix_pubsub, "~> 1.0"},
+      {:wmata, in_umbrella: true}
     ]
   end
 end
