@@ -32,5 +32,32 @@ defmodule AlexaSkillTest do
       assert result.response.outputSpeech.text ==
         "I now know your favorite color is red.  You can ask me your favorite color by saying, what's my favorite color?"
     end
+
+    test "returns response to WhatsMyColorIntent" do
+      request =
+        %{
+          "request" => %{
+            "inDialog" => false,
+            "intent" => %{
+              "name"=> "WhatsMyColorIntent",
+              "slots"=> %{}
+            },
+            "locale" => "en-US", "requestId" => "request123",
+            "timestamp" => "2017-02-26T23=>51=>20Z", "type" => "IntentRequest"
+          },
+          "session" => %{"application" => %{"applicationId" => "appId123"},
+            "attributes" => %{
+              "favoriteColor" => "red"
+            }, "new" => false, "sessionId" => "session123",
+            "user" => %{"userId" => "user123"}
+          },
+          "version" => "1.0"
+        }
+
+      result = AlexaSkill.handle_request(request)
+
+      assert result.response.outputSpeech.text ==
+        "Your favorite color is red. Goodbye."
+    end
   end
 end

@@ -1,5 +1,5 @@
 defmodule AlexaSkill do
-  alias AlexaSkill.ColorPicker.{MyColorIsIntent}
+  alias AlexaSkill.ColorPicker.{WhatsMyColorIntent, MyColorIsIntent}
 
   def handle_request(request) do
     request = AlexaJSON.Request.from_json(request)
@@ -8,6 +8,8 @@ defmodule AlexaSkill do
     case request.request.intent.name do
       "MyColorIsIntent" ->
         MyColorIsIntent.handle_request(request, response)
+      "WhatsMyColorIntent" ->
+        WhatsMyColorIntent.handle_request(request, response)
     end
   end
 end
