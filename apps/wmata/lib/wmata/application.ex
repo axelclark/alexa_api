@@ -10,13 +10,14 @@ defmodule WMATA.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Starts a worker by calling: WMATA.Worker.start_link(arg1, arg2, arg3)
-      worker(WMATA, [])
+      # Starts a worker by calling: SupTask.Worker.start_link(arg1, arg2, arg3)
+      # worker(SupTask.Worker, [arg1, arg2, arg3]),
+      # supervisor(Task.Supervisor, [[name: SupTask.TaskSupervisor]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: WMATA.Supervisor]
-    Supervisor.start_link(children, opts)
+    opts = [name: WMATA.TaskSupervisor]
+    Task.Supervisor.start_link(opts)
   end
 end
