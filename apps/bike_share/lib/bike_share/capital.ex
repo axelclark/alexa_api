@@ -2,6 +2,8 @@ defmodule BikeShare.Capital do
   import SweetXml
   alias BikeShare.BikeStation
 
+  @http Application.get_env(:bike_share, :capital)[:http_client] || :httpc
+
   def start_link(station_id, query_ref, owner, limit) do
     Task.start_link(__MODULE__, :fetch, [station_id, query_ref, owner, limit])
   end
@@ -19,7 +21,7 @@ defmodule BikeShare.Capital do
   def fetch_xml() do
     url = "https://feeds.capitalbikeshare.com/stations/stations.xml"
 
-    {:ok, {_, _, body}} = :httpc.request(String.to_char_list(url))
+    {:ok, {_, _, body}} = @http.request(String.to_char_list(url))
     body
   end
 

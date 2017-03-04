@@ -1,0 +1,36 @@
+<stations lastUpdate="1488662832698" version="2.0">
+  <station>
+    <id>1</id>
+    <name>Eads St and 15th St S</name>
+    <terminalName>31000</terminalName>
+    <lastCommWithServer>1488662828210</lastCommWithServer>
+    <lat>38.858971</lat>
+    <long>-77.05323</long>
+    <installed>true</installed>
+    <locked>false</locked>
+    <installDate>0</installDate>
+    <removalDate/>
+    <temporary>false</temporary>
+    <public>true</public>
+    <nbBikes>3</nbBikes>
+    <nbEmptyDocks>12</nbEmptyDocks>
+    <latestUpdateTime>1488648007087</latestUpdateTime>
+  </station>
+  <station>
+    <id>2</id>
+    <name>18th and Eads St.</name>
+    <terminalName>31001</terminalName>
+    <lastCommWithServer>1488662732110</lastCommWithServer>
+    <lat>38.85725</lat>
+    <long>-77.05332</long>
+    <installed>true</installed>
+    <locked>false</locked>
+    <installDate>0</installDate>
+    <removalDate/>
+    <temporary>false</temporary>
+    <public>true</public>
+    <nbBikes>4</nbBikes>
+    <nbEmptyDocks>7</nbEmptyDocks>
+    <latestUpdateTime>1488657064385</latestUpdateTime>
+  </station>
+</stations>
