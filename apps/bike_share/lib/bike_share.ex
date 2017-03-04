@@ -23,7 +23,7 @@ defmodule BikeShare do
     backend.start_link(station_id, query_ref, owner, limit)
   end
 
-  def compute(station_id, opts \\ []) do
+  def get_station_info(station_id, opts \\ []) do
     limit = opts[:limit] || 10
     backends = opts[:backends] || @backends
 

@@ -22,7 +22,7 @@ defmodule Web.Mixfile do
   def application do
     [mod: {Web, []},
      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext,
-                    :wmata, :httpoison]]
+                    :wmata, :httpoison, :bike_share]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,9 +38,10 @@ defmodule Web.Mixfile do
       {:cowboy, "~> 1.0"},
       {:gettext, "~> 0.11"},
       {:phoenix, "~> 1.2.1"},
-      {:httpoison, "~> 0.10.0"},
+      {:httpoison, "~> 0.11.1"},
       {:phoenix_pubsub, "~> 1.0"},
-      {:wmata, in_umbrella: true}
+      {:wmata, in_umbrella: true},
+      {:bike_share, in_umbrella: true}
     ]
   end
 end
