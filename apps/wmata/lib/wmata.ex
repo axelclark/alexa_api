@@ -1,47 +1,70 @@
 defmodule WMATA do
-  require Logger
+  @backends [WMATA.API]
 
-  def get_station_info(station_code, platform) do
-    spawn_query(station_code, platform)
+  def start_link(backend, query, query_ref, owner, limit) do
+    backend.start_link(query, query_ref, owner, limit)
   end
 
-  def spawn_query(station_code, platform) do
-    WMATA.TaskSupervisor
-    |> Task.Supervisor.async(__MODULE__, :station_info, [station_code, platform])
-    |> Task.await()
+  def get_station_info(station_code, platform, opts \\ []) do
+    limit = opts[:limit] || 10
+    backends = opts[:backends] || @backends
+    query = [station_code: station_code, platform: platform]
+
+    backends
+    |> Enum.map(&spawn_query(&1, query, limit))
+    |> await_results(opts)
   end
 
-  def station_info(station_code, platform) do
-    url_for(station_code)
-    |> HTTPoison.get(api_key(), ssl_option())
-    |> parse_response
-    |> WMATA.Format.station_status(platform)
+  def spawn_query(backend, query, limit) do
+    query_ref = make_ref()
+    opts = [backend, query, query_ref, self(), limit]
+    {:ok, pid} = Supervisor.start_child(WMATA.Supervisor, opts)
+    monitor_ref = Process.monitor(pid)
+    {pid, monitor_ref, query_ref}
   end
 
-  defp url_for(station_code) do
-    station_code = URI.encode(station_code)
-    "https://api.wmata.com/StationPrediction.svc/json/GetPrediction/#{station_code}"
+  def await_results(children, opts) do
+    timeout = opts[:timeout] || 5000
+    timer = Process.send_after(self(), :timedout, timeout)
+    results = await_result(children, "", :infinity)
+    cleanup(timer)
+    results
   end
 
-  defp parse_response({:ok, %HTTPoison.Response{body: body, status_code: 200}}) do
-    body
-    |> Poison.decode!
-    |> get_trains_for_station
+  defp await_result([head|tail], acc, timeout) do
+    {pid, monitor_ref, query_ref} = head
+
+    receive do
+      {:results, ^query_ref, results} ->
+        Process.demonitor(monitor_ref, [:flush])
+        await_result(tail, results <> acc, timeout)
+      {:DOWN, ^monitor_ref, :process, ^pid, _reason} ->
+        await_result(tail, acc, timeout)
+      :timedout ->
+        kill(pid, monitor_ref)
+        await_result(tail, acc, 0)
+    after
+      timeout ->
+        kill(pid, monitor_ref)
+        await_result(tail, acc, 0)
+    end
   end
 
-  defp parse_response(_) do
-    :error
+  defp await_result([], acc, _) do
+    acc
   end
 
-  defp get_trains_for_station(json) do
-    json["Trains"]
+  defp kill(pid, ref) do
+    Process.demonitor(ref, [:flush])
+    Process.exit(pid, :kill)
   end
 
-  defp api_key do
-    [{"api_key", "4f3b58f7cca542ec97c1221da5a60fd0"}]
-  end
-
-  defp ssl_option do
-    [ssl: [versions: [:"tlsv1.2"]]]
+  defp cleanup(timer) do
+    :erlang.cancel_timer(timer)
+    receive do
+      :timedout -> :ok
+    after
+      0 -> :ok
+    end
   end
 end
