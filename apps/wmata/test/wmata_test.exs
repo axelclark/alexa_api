@@ -13,14 +13,14 @@ defmodule WMATATest do
     end
 
     def station_info(
-      [station_code: "timeout", platform: _], ref, owner, _limit
+      [station_code: "timeout", platform: _], _ref, owner, _limit
     ) do
       send(owner, {:backend, self()})
       :timer.sleep(:infinity)
     end
 
     def station_info(
-      [station_code: "boom", platform: _], ref, owner, _limit
+      [station_code: "boom", platform: _], _ref, _owner, _limit
     ) do
       raise "boom!"
     end

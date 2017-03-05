@@ -3,7 +3,7 @@ defmodule WMATA.Backends.APITest do
 
   alias WMATA.API
 
-  describe "" do
+  describe "start_link/4" do
     test "makes request, reports results, then terminates" do
       query = [station_code: "A14", platform: "2"]
       ref = make_ref()
