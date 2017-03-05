@@ -1,70 +1,47 @@
 defmodule WMATA do
-  @backends [WMATA.API]
+  @backend WMATA.API
 
-  def start_link(backend, query, query_ref, owner, limit) do
-    backend.start_link(query, query_ref, owner, limit)
+  def station_info(backend, query, owner) do
+    backend.station_info(query, owner)
   end
 
   def get_station_info(station_code, platform, opts \\ []) do
-    limit = opts[:limit] || 10
-    backends = opts[:backends] || @backends
+    backend = opts[:backend] || @backend
     query = [station_code: station_code, platform: platform]
+    owner = self()
 
-    backends
-    |> Enum.map(&spawn_query(&1, query, limit))
+    backend
+    |> spawn_query(query, owner)
     |> await_results(opts)
   end
 
-  def spawn_query(backend, query, limit) do
-    query_ref = make_ref()
-    opts = [backend, query, query_ref, self(), limit]
-    {:ok, pid} = Supervisor.start_child(WMATA.Supervisor, opts)
-    monitor_ref = Process.monitor(pid)
-    {pid, monitor_ref, query_ref}
+  def spawn_query(backend, query, owner) do
+    Task.Supervisor.async_nolink(
+      WMATA.TaskSupervisor, __MODULE__, :station_info, [backend, query, owner]
+    )
   end
 
-  def await_results(children, opts) do
+  def await_results(task, opts) do
     timeout = opts[:timeout] || 5000
-    timer = Process.send_after(self(), :timedout, timeout)
-    results = await_result(children, "", :infinity)
-    cleanup(timer)
-    results
+    await_result(task, timeout)
   end
 
-  defp await_result([head|tail], acc, timeout) do
-    {pid, monitor_ref, query_ref} = head
-
+  def await_result(%{ref: ref, pid: pid, owner: _owner}, timeout \\ 5000) do
     receive do
-      {:results, ^query_ref, results} ->
-        Process.demonitor(monitor_ref, [:flush])
-        await_result(tail, results <> acc, timeout)
-      {:DOWN, ^monitor_ref, :process, ^pid, _reason} ->
-        await_result(tail, acc, timeout)
-      :timedout ->
-        kill(pid, monitor_ref)
-        await_result(tail, acc, 0)
+      {^ref, reply} ->
+        Process.demonitor(ref, [:flush])
+        reply
+      {:DOWN, ^ref, _, _proc, _reason} ->
+        "There was an error with the request."
     after
       timeout ->
-        kill(pid, monitor_ref)
-        await_result(tail, acc, 0)
+        kill(pid, ref)
+        "The request timed out."
     end
-  end
-
-  defp await_result([], acc, _) do
-    acc
   end
 
   defp kill(pid, ref) do
     Process.demonitor(ref, [:flush])
     Process.exit(pid, :kill)
-  end
-
-  defp cleanup(timer) do
-    :erlang.cancel_timer(timer)
-    receive do
-      :timedout -> :ok
-    after
-      0 -> :ok
-    end
   end
 end

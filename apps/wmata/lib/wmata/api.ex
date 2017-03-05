@@ -1,11 +1,7 @@
 defmodule WMATA.API do
   @http Application.get_env(:wmata, :api)[:http_client] || HTTPoison
 
-  def start_link(query, query_ref, owner, limit) do
-    Task.start_link(__MODULE__, :station_info, [query, query_ref, owner, limit])
-  end
-
-  def station_info(query, query_ref, owner, _limit) do
+  def station_info(query, _owner) do
     station_code = query[:station_code] || "E03"
     platform = query[:platform] || "2"
 
@@ -14,7 +10,6 @@ defmodule WMATA.API do
     |> @http.get(api_key(), ssl_option())
     |> parse_response
     |> WMATA.Format.station_status(platform)
-    |> send_results(query_ref, owner)
   end
 
 
@@ -39,9 +34,5 @@ defmodule WMATA.API do
 
   defp get_trains_for_station(json) do
     json["Trains"]
-  end
-
-  defp send_results(station_status, query_ref, owner) do
-    send(owner, {:results, query_ref, station_status})
   end
 end

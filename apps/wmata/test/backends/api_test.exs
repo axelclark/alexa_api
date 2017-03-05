@@ -3,16 +3,12 @@ defmodule WMATA.Backends.APITest do
 
   alias WMATA.API
 
-  describe "start_link/4" do
-    test "makes request, reports results, then terminates" do
+  describe "station_info/2" do
+    test "returns station status" do
       query = [station_code: "A14", platform: "2"]
-      ref = make_ref()
-      {:ok, pid} = API.start_link(query, ref, self(), 1)
-      Process.monitor(pid)
+      result = API.station_info(query, [])
 
-      station_status = station_status()
-      assert_receive {:results, ^ref, ^station_status}
-      assert_receive {:DOWN, _ref, :process, ^pid, :normal}
+      assert result == station_status()
     end
   end
 

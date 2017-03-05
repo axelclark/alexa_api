@@ -11,7 +11,8 @@ defmodule WMATA.Application do
     # Define workers and child supervisors to be supervised
     children = [
       # Starts a worker by calling: SupTask.Worker.start_link(arg1, arg2, arg3)
-      worker(WMATA, [], restart: :temporary),
+      supervisor(Task.Supervisor, [[name: WMATA.TaskSupervisor]])
+      # worker(WMATA, [], restart: :temporary),
       # supervisor(Task.Supervisor, [[name: SupTask.TaskSupervisor]])
     ]
 
@@ -19,7 +20,7 @@ defmodule WMATA.Application do
     # for other strategies and supported options
     opts = [
       name: WMATA.Supervisor,
-      strategy: :simple_one_for_one
+      strategy: :one_for_one
     ]
     Supervisor.start_link(children, opts)
   end
