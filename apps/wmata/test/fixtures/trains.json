@@ -1,0 +1,48 @@
+{
+  "Trains": [
+    {
+      "Car": "8",
+      "Destination": "Shady Gr",
+      "DestinationCode": "A15",
+      "DestinationName": "Shady Grove",
+      "Group": "2",
+      "Line": "RD",
+      "LocationCode": "A05",
+      "LocationName": "Cleveland Park",
+      "Min": "BRD"
+    },
+    {
+      "Car": "8",
+      "Destination": "Shady Gr",
+      "DestinationCode": "A15",
+      "DestinationName": "Shady Grove",
+      "Group": "2",
+      "Line": "RD",
+      "LocationCode": "A09",
+      "LocationName": "Bethesda",
+      "Min": "5"
+    },
+    {
+      "Car": "8",
+      "Destination": "Shady Gr",
+      "DestinationCode": "A15",
+      "DestinationName": "Shady Grove",
+      "Group": "1",
+      "Line": "RD",
+      "LocationCode": "A14",
+      "LocationName": "Rockville",
+      "Min": "BRD"
+    },
+    {
+      "Car": "8",
+      "Destination": "Shady Gr",
+      "DestinationCode": "A15",
+      "DestinationName": "Shady Grove",
+      "Group": "2",
+      "Line": "RD",
+      "LocationCode": "B03",
+      "LocationName": "Union Station",
+      "Min": "10"
+    }
+  ]
+}

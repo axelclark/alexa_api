@@ -1,4 +1,5 @@
 defmodule WMATA.API do
+  @http Application.get_env(:wmata, :api)[:http_client] || HTTPoison
 
   def start_link(query, query_ref, owner, limit) do
     Task.start_link(__MODULE__, :station_info, [query, query_ref, owner, limit])
@@ -10,7 +11,7 @@ defmodule WMATA.API do
 
     station_code
     |> url_for
-    |> HTTPoison.get(api_key(), ssl_option())
+    |> @http.get(api_key(), ssl_option())
     |> parse_response
     |> WMATA.Format.station_status(platform)
     |> send_results(query_ref, owner)
