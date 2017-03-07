@@ -9,10 +9,12 @@ defmodule WMATA do
     backend = opts[:backend] || @backend
     query = [station_code: station_code, platform: platform]
     owner = self()
+    timeout = opts[:timeout] || 5000
 
     backend
     |> spawn_query(query, owner)
-    |> await_results(opts)
+    |> handle_result(timeout)
+
   end
 
   def spawn_query(backend, query, owner) do
@@ -21,27 +23,14 @@ defmodule WMATA do
     )
   end
 
-  def await_results(task, opts) do
-    timeout = opts[:timeout] || 5000
-    await_result(task, timeout)
-  end
-
-  def await_result(%{ref: ref, pid: pid, owner: _owner}, timeout \\ 5000) do
-    receive do
-      {^ref, reply} ->
-        Process.demonitor(ref, [:flush])
-        reply
-      {:DOWN, ^ref, _, _proc, _reason} ->
+  def handle_result(task, timeout) do
+    case Task.yield(task, timeout) || Task.shutdown(task) do
+      {:ok, result} ->
+        result
+      {:exit, _reason} ->
         "There was an error with the request."
-    after
-      timeout ->
-        kill(pid, ref)
+      nil ->
         "The request timed out."
     end
-  end
-
-  defp kill(pid, ref) do
-    Process.demonitor(ref, [:flush])
-    Process.exit(pid, :kill)
   end
 end
